@@ -12,4 +12,10 @@ public class TestController {
         return "Spring boot and react are linked up, i swear tests work";
     }
 
+    Wrapper wrapper = new Wrapper();
+    @GetMapping("/hardcover")
+    public String hardcover() throws Exception{
+        return wrapper.searchBook("a wizard of earthsea");
+    }
+
 }
