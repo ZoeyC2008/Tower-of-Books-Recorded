@@ -5,5 +5,7 @@ public class ConsoleMain {
         Wrapper wrapper = new Wrapper();
 
         String temp = wrapper.searchBook("a wizard of earthsea");
+
+        System.out.println("??");
     }
 }

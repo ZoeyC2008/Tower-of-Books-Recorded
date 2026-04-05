@@ -3,30 +3,30 @@ package tbr.concept;
 import java.util.*;
 
 public class Shelf {
-    ArrayList<Work> books;
+    ArrayList<Book> books;
 
     public Shelf(){
-        books = new ArrayList<Work>();
+        books = new ArrayList<Book>();
     }
 
-    public void add(Work work){
-        if (books.contains(work)) {
+    public void add(Book book){
+        if (books.contains(book)) {
             return;
         }
-        books.add(work);
+        books.add(book);
     }
 
-    public void remove(Work work){
-        if (books.contains(work)){
-            books.remove(work);
+    public void remove(Book book){
+        if (books.contains(book)){
+            books.remove(book);
         }
     }
 
-    public Work getBook(int index){
+    public Book getBook(int index){
         return books.get(index);
     }
 
-    public boolean contains(Work work){
-        return books.contains(work);
+    public boolean contains(Book book){
+        return books.contains(book);
     }
 }

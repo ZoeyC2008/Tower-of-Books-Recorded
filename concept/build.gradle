@@ -27,6 +27,7 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     runtimeOnly 'com.h2database:h2'
+    implementation 'org.json:json:20240303'
 }
 
 tasks.named('test') {

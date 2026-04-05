@@ -1,6 +1,8 @@
 package tbr.concept;
 
-public class Work {
+import java.util.Arrays;
+
+public class Book {
     private int id;
     private String title;
     private String slug;
@@ -16,7 +18,7 @@ public class Work {
     private String[] seriesNames;
     private String[] contentWarnings;
 
-    public Work(int id, String title, String slug, String description, String[] authors, String coverURL, String featuredSeriesName, String featuredSeriesPos, String featuredSeriesSlug, int featuredSeriesId, String[] genres, String[] isbn, String[] seriesNames, String[] contentWarnings) {
+    public Book(int id, String title, String slug, String description, String[] authors, String coverURL, String featuredSeriesName, String featuredSeriesPos, String featuredSeriesSlug, int featuredSeriesId, String[] genres, String[] isbn, String[] seriesNames, String[] contentWarnings) {
         this.id = id;
         this.title = title;
         this.slug = slug;
@@ -90,5 +92,10 @@ public class Work {
 
     public String[] getContentWarnings() {
         return contentWarnings;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{id=" + id + ", title='" + title + "', authors=" + Arrays.toString(authors) + "}";
     }
 }
