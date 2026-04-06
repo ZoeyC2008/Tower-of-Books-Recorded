@@ -17,6 +17,46 @@ public class Wrapper {
 
     }
 
+    public Book getBookByID(int id) throws Exception{
+        String searchQuery = String.format(
+                "{ books(where: {id: {_eq: %d}}) { id title slug description image { url } } }",
+                id
+        );
+
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(API_URL))
+                .header("Content-Type", "application/json")
+                .header("Authorization", API_TOKEN)
+                .POST(HttpRequest.BodyPublishers.ofString(searchQuery))
+                .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        Book[] searchBooks = parseBooks(response.body());
+
+        return searchBooks[0];
+    }
+
+    public Book[] searchBookReturnArray(String query) throws Exception{
+        String searchQuery = "{\"query\": \"{search(query: \\\"" + query + "\\\", query_type: \\\"book\\\") {results}}\"}";
+
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(API_URL))
+                .header("Content-Type", "application/json")
+                .header("Authorization", API_TOKEN)
+                .POST(HttpRequest.BodyPublishers.ofString(searchQuery))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        Book[] searchBooks = parseBooks(response.body());
+
+        //System.out.println(Arrays.toString(searchBooks));
+
+        return searchBooks;
+    }
+
     public String searchBook(String query) throws Exception{
         String searchQuery = "{\"query\": \"{search(query: \\\"" + query + "\\\", query_type: \\\"book\\\") {results}}\"}";
 
@@ -33,7 +73,7 @@ public class Wrapper {
 
         Book[] searchBooks = parseBooks(response.body());
 
-        System.out.println(Arrays.toString(searchBooks));
+        //System.out.println(Arrays.toString(searchBooks));
 
         return response.body();
     }
@@ -65,19 +105,33 @@ public class Wrapper {
         String title = doc.optString("title", "");
         String slug = doc.optString("slug", "");
         String description = doc.optString("description", "");
-        String coverURL = doc.optString("cover_image_url", "");
+
+        String coverURL = "";
+        JSONObject image = doc.optJSONObject("image");
+        if (image != null) {
+            coverURL = image.optString("url", "");
+        }
 
         String[] authors = jsonArrayToStringArray(doc.optJSONArray("author_names"));
         String[] isbn = jsonArrayToStringArray(doc.optJSONArray("isbns"));
         String[] seriesNames = jsonArrayToStringArray(doc.optJSONArray("series_names"));
-        String[] genres = jsonArrayToStringArray(doc.optJSONArray("genre_names"));
+        String[] genres = jsonArrayToStringArray(doc.optJSONArray("genres"));
         String[] contentWarnings = jsonArrayToStringArray(doc.optJSONArray("content_warnings"));
 
         // Featured series (first entry in series arrays if present)
-        String featuredSeriesName = seriesNames.length > 0 ? seriesNames[0] : "";
-        String featuredSeriesPos = doc.optString("featured_series_position", "");
-        String featuredSeriesSlug = doc.optString("featured_series_slug", "");
-        int featuredSeriesId = doc.optInt("featured_series_id", 0);
+        String featuredSeriesName = "";
+        int featuredSeriesId = -1;
+        String featuredSeriesSlug = "";
+        JSONObject featured_series = doc.optJSONObject("featured_series");
+        if (featured_series != null) {
+            JSONObject series = featured_series.optJSONObject("series");
+            if  (series != null) {
+                featuredSeriesName = series.optString("name", "");
+                featuredSeriesId = series.optInt("id", -1);
+                featuredSeriesSlug = series.optString("slug", "");
+            }
+        }
+        int featuredSeriesPos = doc.optInt("featured_series_position", -1);
 
         return new Book(id, title, slug, description, authors, coverURL, featuredSeriesName, featuredSeriesPos, featuredSeriesSlug,  featuredSeriesId, genres, isbn, seriesNames, contentWarnings);
     }

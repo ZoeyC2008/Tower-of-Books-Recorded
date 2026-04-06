@@ -10,7 +10,7 @@ public class Book {
     private String[] authors;
     private String coverURL;
     private String featuredSeriesName;
-    private String featuredSeriesPos;
+    private int featuredSeriesPos;
     private String featuredSeriesSlug;
     private int featuredSeriesId;
     private String[] genres;
@@ -18,7 +18,11 @@ public class Book {
     private String[] seriesNames;
     private String[] contentWarnings;
 
-    public Book(int id, String title, String slug, String description, String[] authors, String coverURL, String featuredSeriesName, String featuredSeriesPos, String featuredSeriesSlug, int featuredSeriesId, String[] genres, String[] isbn, String[] seriesNames, String[] contentWarnings) {
+    public Book(int id){
+        //i'll come back to this today
+    }
+
+    public Book(int id, String title, String slug, String description, String[] authors, String coverURL, String featuredSeriesName, int featuredSeriesPos, String featuredSeriesSlug, int featuredSeriesId, String[] genres, String[] isbn, String[] seriesNames, String[] contentWarnings) {
         this.id = id;
         this.title = title;
         this.slug = slug;
@@ -66,7 +70,7 @@ public class Book {
         return featuredSeriesName;
     }
 
-    public String getFeaturedSeriesPos() {
+    public int getFeaturedSeriesPos() {
         return featuredSeriesPos;
     }
 
