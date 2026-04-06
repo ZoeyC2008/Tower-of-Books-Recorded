@@ -7,7 +7,6 @@ export default function Navbar(){
         <ul>
             <li><Link to="/search">Search</Link></li>
             <li><Link to="/tbr">TBR</Link></li>
-            <li><Link to="/card">Card</Link></li>
         </ul>
 
     </nav>

@@ -5,6 +5,5 @@ export default [
 
     route("search", "routes/search.tsx"),
     route("tbr", "routes/tbr.tsx"),
-    route("card", "routes/card.tsx"),
 
 ] satisfies RouteConfig;

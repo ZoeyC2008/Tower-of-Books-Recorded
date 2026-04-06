@@ -31,14 +31,24 @@ public class TestController {
     }
 
     @GetMapping("/shelves/tbr")
-    public Book[] searchShelves() {
+    public Book[] getTBRBooks()  {
         return shelfService.getTBR();
     }
 
-    @PostMapping("/shelves/tbr/{id}")
-    public void addTBR(@PathVariable int id) throws  Exception{
-        shelfService.addTBR(id);
-        System.out.println(id);
+    @GetMapping("/shelves/read")
+    public Book[] getReadBooks()  {
+        return shelfService.getREAD();
+    }
+
+    @GetMapping("/shelves/all")
+    public Book[] getAllBooks()  {
+        return shelfService.getCombined();
+    }
+
+    @PostMapping("/shelves/tbr")
+    public void addTBR(@RequestBody Book book) {
+        System.out.println("Received book: " + book);
+        shelfService.addTBR(book);
     }
 
     @PostMapping("/shelves/tbr/{id}/move-to-read")

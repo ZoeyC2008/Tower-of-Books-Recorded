@@ -1,5 +1,6 @@
 import {useState} from 'react'
 import type {Book} from "~/types/book";
+import BookCard from "~/components/bookcard";
 
 
 export default function Search() {
@@ -12,10 +13,17 @@ export default function Search() {
         const data = await res.json();
         setBooks(data);
     };
-    const addTBR = async (id: number) => {
-        await fetch(`http://localhost:8080/api/shelves/tbr/${id}`, {
-            method: "POST",
-        });
+    const addTBR = async (book: Book) => {
+        try {
+            await fetch(`http://localhost:8080/api/shelves/tbr`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(book),
+            });
+            console.log("Added to TBR:", book.id);
+        } catch (err) {
+            console.error("Failed to add to TBR", err);
+        }
     };
 
     return (
@@ -28,16 +36,14 @@ export default function Search() {
             <button onClick={search}>Search</button>
 
             <div>
-                {books.map((book) => (
-                    <div key={book.id}>
-                        <img src={book.coverURL} width={80}/>
-                        <h3>{book.title}</h3>
-                        <p>{book.authors.join(", ")}</p>
-                        <button onClick={() => addTBR(book.id)}>
-                            Add to TBR
-                        </button>
-                    </div>
+                {books.map(book => (
+                    <BookCard
+                        key={book.id}
+                        book={book}
+                        onAddTBR={addTBR}
+                    />
                 ))}
+
             </div>
         </div>
     );

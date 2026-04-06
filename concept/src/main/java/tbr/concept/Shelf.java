@@ -3,10 +3,23 @@ package tbr.concept;
 import java.util.*;
 
 public class Shelf {
-    ArrayList<Book> books;
+    private ArrayList<Book> books;
+    private final String NAME;
 
-    public Shelf() {
+    public Shelf(String name) {
         books = new ArrayList<Book>();
+        this.NAME = name;
+    }
+
+
+    public void sort() {
+        books.sort(Comparator.comparing(book -> {
+            String[] authors = book.getAuthors();
+            if (authors == null || authors.length == 0) return "";
+            String author = authors[0];
+            String[] parts = author.split(" ");
+            return parts[parts.length - 1]; // assumes the last word is the last name, edge cases include all of Asia (e.g. Cixin Liu or Liu Cixin, The Three Body Problem) and two word, non-hyphenated last names (e.g. Gabriel García Márquez, One Hundred Years of Solitude) and prefixed names (e.g. Johann Wolfgang von Goethe, Faust) (but hardcover doesn't seem to have a separate author last name, so we ball)
+        }));
     }
 
     public void add(Book book) {
@@ -18,7 +31,10 @@ public class Shelf {
             }
         }
 
+
         books.add(book);
+        book.setShelfName(this.NAME);
+        sort();
     }
 
 //    public void add(int id){
@@ -46,6 +62,9 @@ public class Shelf {
         if (index != -1) {
             books.remove(index);
         }
+
+        book.setShelfName("");
+        sort();
     }
 
     public void remove(int id){
@@ -60,12 +79,18 @@ public class Shelf {
         if (index != -1) {
             books.remove(index);
         }
+
+
+        sort();
     }
 
     public boolean containsId(int id) {
         for (int i = 0; i < books.size(); i++) {
-            if (books.get(i).getId() == id) return true;
+            if (books.get(i).getId() == id) {
+                return true;
+            }
         }
+
         return false;
     }
 
@@ -93,5 +118,9 @@ public class Shelf {
 
     public boolean contains(Book book) {
         return books.contains(book);
+    }
+
+    public String getName() {
+        return NAME;
     }
 }

@@ -1,5 +1,9 @@
 package tbr.concept;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Arrays;
 
 public class Book {
@@ -18,11 +22,28 @@ public class Book {
     private String[] seriesNames;
     private String[] contentWarnings;
 
-    public Book(int id){
-        //i'll come back to this today
-    }
+    @JsonIgnore
+    private String shelfName = null;
 
-    public Book(int id, String title, String slug, String description, String[] authors, String coverURL, String featuredSeriesName, int featuredSeriesPos, String featuredSeriesSlug, int featuredSeriesId, String[] genres, String[] isbn, String[] seriesNames, String[] contentWarnings) {
+    public Book(){}
+
+    @JsonCreator
+    public Book(
+            @JsonProperty("id") int id,
+            @JsonProperty("title") String title,
+            @JsonProperty("slug") String slug,
+            @JsonProperty("description") String description,
+            @JsonProperty("authors") String[] authors,
+            @JsonProperty("coverURL") String coverURL,
+            @JsonProperty("featuredSeriesName") String featuredSeriesName,
+            @JsonProperty("featuredSeriesPos") int featuredSeriesPos,
+            @JsonProperty("featuredSeriesSlug") String featuredSeriesSlug,
+            @JsonProperty("featuredSeriesId") int featuredSeriesId,
+            @JsonProperty("genres") String[] genres,
+            @JsonProperty("isbn") String[] isbn,
+            @JsonProperty("seriesNames") String[] seriesNames,
+            @JsonProperty("contentWarnings") String[] contentWarnings
+    )  {
         this.id = id;
         this.title = title;
         this.slug = slug;
@@ -40,6 +61,15 @@ public class Book {
     }
 
 
+
+    public void setShelfName(String shelf) {
+        this.shelfName = shelf;
+    }
+
+    @JsonProperty("shelf")
+    public String getShelfName() {
+        return shelfName;
+    }
 
     //getters
     public int getId() {

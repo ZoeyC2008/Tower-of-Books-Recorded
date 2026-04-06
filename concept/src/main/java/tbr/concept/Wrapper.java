@@ -17,10 +17,15 @@ public class Wrapper {
 
     }
 
-    public Book getBookByID(int id) throws Exception{
-        String searchQuery = String.format(
-                "{ books(where: {id: {_eq: %d}}) { id title slug description image { url } } }",
+    public Book getBookByID(int id) throws Exception {
+        String graphqlQuery = String.format(
+                "{ books(where: {id: {_eq: %d}}) { id title slug description image { url } author_names genres content_warnings featured_series { series { name id slug } } featured_series_position } }",
                 id
+        );
+
+        String requestBody = String.format(
+                "{\"query\": \"%s\"}",
+                graphqlQuery.replace("\"", "\\\"")
         );
 
         HttpClient client = HttpClient.newHttpClient();
@@ -28,13 +33,23 @@ public class Wrapper {
                 .uri(URI.create(API_URL))
                 .header("Content-Type", "application/json")
                 .header("Authorization", API_TOKEN)
-                .POST(HttpRequest.BodyPublishers.ofString(searchQuery))
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
+
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        Book[] searchBooks = parseBooks(response.body());
+        System.out.println("RAW RESPONSE:");
+        System.out.println(response.body());
 
-        return searchBooks[0];
+        JSONObject json = new JSONObject(response.body());
+        JSONArray booksArr = json.getJSONObject("data").getJSONArray("books");
+
+        if (booksArr.isEmpty()) {
+            throw new RuntimeException("No book found for id " + id);
+        }
+
+        JSONObject doc = booksArr.getJSONObject(0);
+        return parseBook(doc);
     }
 
     public Book[] searchBookReturnArray(String query) throws Exception{

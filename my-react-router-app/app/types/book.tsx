@@ -13,4 +13,5 @@ export type Book = {
     isbn: string[];
     seriesNames: string[];
     contentWarnings: string[];
+    shelf: string;
 }
