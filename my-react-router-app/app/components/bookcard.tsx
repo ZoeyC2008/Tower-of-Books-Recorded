@@ -1,4 +1,5 @@
 import type { Book } from "~/types/book.tsx";
+import "~/app.css";
 import { useState, useRef, useEffect } from "react";
 
 type BookCardProps = {
@@ -10,6 +11,7 @@ type BookCardProps = {
 };
 
 const HOLD_DURATION = 500;
+const RING_DELAY = 300;
 const CIRCUMFERENCE = 2 * Math.PI * 19; //
 
 function ShelfButton({ shelf, onAddTBR, onMoveToRead, onRemove, book, onFlip }: {
@@ -37,26 +39,29 @@ function ShelfButton({ shelf, onAddTBR, onMoveToRead, onRemove, book, onFlip }: 
         : shelf === "read" ? "#3d9e5e"
             : "#c8a87a";
 
+    const [holding, setHolding] = useState(false);
+    const ringDelayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
     const startHold = () => {
         didLongPress.current = false;
-        setProgress(0);
-        const start = Date.now();
-        intervalRef.current = setInterval(() => {
-            const p = Math.min((Date.now() - start) / HOLD_DURATION, 1);
-            setProgress(p);
-        }, 16);
+
+        ringDelayRef.current = setTimeout(() => {
+            setHolding(true); // ring appears after delay
+        }, RING_DELAY);
+
         timerRef.current = setTimeout(() => {
             didLongPress.current = true;
-            cleanup();
-            setProgress(0);
+            setHolding(false);
             onFlip();
         }, HOLD_DURATION);
     };
 
     const cancelHold = () => {
-        cleanup();
-        setProgress(0);
+        if (ringDelayRef.current) clearTimeout(ringDelayRef.current);
+        if (timerRef.current) clearTimeout(timerRef.current);
+        setHolding(false);
     };
+
 
     const cleanup = () => {
         if (intervalRef.current) clearInterval(intervalRef.current);
@@ -94,17 +99,19 @@ function ShelfButton({ shelf, onAddTBR, onMoveToRead, onRemove, book, onFlip }: 
             {/* hold progress ring */}
             <svg
                 width="38" height="38"
-                style={{ position: "absolute", inset: 0, transform: "rotate(-90deg)", pointerEvents: "none" }}
+                style={{ position: "absolute", inset: 0, transform: "rotate(-90deg)", transformOrigin: "19px 19px", pointerEvents: "none", margin: "auto", }}
                 viewBox="0 0 38 38"
             >
                 <circle
                     cx="19" cy="19" r="17"
                     fill="none"
                     stroke={ringColor}
-                    strokeWidth="2.5"
+                    strokeWidth="3.5"
                     strokeDasharray={CIRCUMFERENCE}
-                    strokeDashoffset={strokeOffset}
-                    style={{ transition: progress === 0 ? "none" : "stroke-dashoffset 0.016s linear" }}
+                    strokeDashoffset={CIRCUMFERENCE}
+                    style={holding ? {
+                        animation: `fillRing ${HOLD_DURATION - RING_DELAY}ms linear forwards`
+                    } : {}}
                 />
             </svg>
         </button>
@@ -116,25 +123,29 @@ function RemoveButton({ onRemove, bookId, onFlip }: {
     bookId: number;
     onFlip: () => void;
 }) {
+    const [holding, setHolding] = useState(false);
     const [progress, setProgress] = useState(0);
-    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    const ringDelayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    const didLongPress = useRef(false);
 
     const startHold = () => {
-        setProgress(0);
-        const start = Date.now();
-        intervalRef.current = setInterval(() => {
-            const p = Math.min((Date.now() - start) / HOLD_DURATION, 1);
-            setProgress(p);
-        }, 16);
+        didLongPress.current = false;
+        ringDelayRef.current = setTimeout(() => setHolding(true), RING_DELAY);
         timerRef.current = setTimeout(() => {
-            cleanup();
-            setProgress(0);
-            onFlip(); // flip back to normal
+            didLongPress.current = true;
+            setHolding(false);
+            onFlip();
         }, HOLD_DURATION);
     };
 
-    const cancelHold = () => { cleanup(); setProgress(0); };
+    const cancelHold = () => {
+        if (ringDelayRef.current) clearTimeout(ringDelayRef.current);
+        if (timerRef.current) clearTimeout(timerRef.current);
+        setHolding(false);
+    };
+
     const cleanup = () => {
         if (intervalRef.current) clearInterval(intervalRef.current);
         if (timerRef.current) clearTimeout(timerRef.current);
@@ -162,15 +173,19 @@ function RemoveButton({ onRemove, bookId, onFlip }: {
         >
             <svg
                 width="38" height="38"
-                style={{ position: "absolute", inset: 0, transform: "rotate(-90deg)", pointerEvents: "none" }}
+                style={{ position: "absolute", inset: 0, transform: "rotate(-90deg)", transformOrigin: "19px 19px", pointerEvents: "none", margin: "auto", }}
                 viewBox="0 0 38 38"
             >
                 <circle
                     cx="19" cy="19" r="17"
-                    fill="none" stroke="#e05050" strokeWidth="2.5"
+                    fill="none"
+                    stroke="#e05050"
+                    strokeWidth="3.5"
                     strokeDasharray={CIRCUMFERENCE}
-                    strokeDashoffset={strokeOffset}
-                    style={{ transition: progress === 0 ? "none" : "stroke-dashoffset 0.016s linear" }}
+                    strokeDashoffset={CIRCUMFERENCE}
+                    style={holding ? {
+                        animation: `fillRing ${HOLD_DURATION - RING_DELAY}ms linear forwards`
+                    } : {}}
                 />
             </svg>
         </button>
@@ -253,19 +268,12 @@ function BookCard({ book, shelf, onAddTBR, onMoveToRead, onRemove }: BookCardPro
                     // Library info panel
                     <div style={{ flex: 1, padding: "14px 12px", display: "flex", flexDirection: "column", gap: 6, minWidth: 0 }}>
                         <div style={{ fontSize: 11, fontWeight: 500, color: "#7a6147", textTransform: "uppercase", letterSpacing: "0.04em" }}>
-                            Ottawa Public Library
+                            Library
                         </div>
                         {/* placeholder — replace with real API data */}
-                        <div style={{ fontSize: 14, color: "#3d9e5e", fontWeight: 500 }}>
-                            checking availability...
+                        <div style={{ fontSize: 14, color: "#7a6147", fontWeight: 500 }}>
+                            Availability checks pending
                         </div>
-                        <button style={{
-                            alignSelf: "flex-start", fontSize: 12, color: "#3a7bd5",
-                            background: "#dbeafe", border: "0.5px solid #3a7bd5",
-                            borderRadius: 6, padding: "5px 12px", cursor: "pointer", fontFamily: "inherit",
-                        }}>
-                            place hold
-                        </button>
                         <div style={{ fontSize: 11, color: "#9e7d54" }}>hold button to go back</div>
                     </div>
                 )}
