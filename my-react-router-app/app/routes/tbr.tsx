@@ -60,7 +60,6 @@ export default function TBR() {
 
     return (
         <div style={{
-            //maxWidth: "720px",
             margin: "0 auto",
             padding: "1.5rem",
             display: "flex",
