@@ -200,7 +200,7 @@ function BookCard({ book, shelf, onAddTBR, onMoveToRead, onRemove }: BookCardPro
 
     return (
         <div style={{
-            border: "1.5px solid #c8b99a", borderRadius: 12,
+            border: "2px solid #b87d11", borderRadius: 12,
             background: "#fdf6ec", color: "#3d2e1e", overflow: "hidden",
         }}>
             <div style={{ display: "flex", alignItems: "stretch", minHeight: 120 }}>
@@ -267,14 +267,13 @@ function BookCard({ book, shelf, onAddTBR, onMoveToRead, onRemove }: BookCardPro
                 ) : (
                     // Library info panel
                     <div style={{ flex: 1, padding: "14px 12px", display: "flex", flexDirection: "column", gap: 6, minWidth: 0 }}>
-                        <div style={{ fontSize: 11, fontWeight: 500, color: "#7a6147", textTransform: "uppercase", letterSpacing: "0.04em" }}>
-                            Library
+                        <div style={{ fontSize: 16, fontWeight: 500, color: "#7a6147", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                            Libraries Pending
                         </div>
                         {/* placeholder — replace with real API data */}
                         <div style={{ fontSize: 14, color: "#7a6147", fontWeight: 500 }}>
                             Availability checks pending
                         </div>
-                        <div style={{ fontSize: 11, color: "#9e7d54" }}>hold button to go back</div>
                     </div>
                 )}
 

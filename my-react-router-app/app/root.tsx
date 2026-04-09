@@ -7,7 +7,8 @@ export default function Root() {
         <head>
             <meta charSet="utf-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
-            <title>TBR</title>
+            <title>Tower of Books Recorded</title>
+            <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
             <Meta />
             <Links />
         </head>

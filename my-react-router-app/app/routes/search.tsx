@@ -1,6 +1,7 @@
 import {useState} from 'react'
 import type {Book} from "~/types/book";
 import BookCard from "~/components/bookcard";
+import "~/app.css"
 
 
 export default function Search() {
@@ -70,20 +71,73 @@ export default function Search() {
             method: "DELETE",
         });
         // remove from local state immediately
-        setBooks(prev => prev.filter(b => b.id !== id));
+        setBooks(prev => prev.map(b =>
+            b.id === id ? { ...b, shelf: "" } : b
+        ));
+        //setBooks(prev => prev.filter(b => b.id !== id));
     };
 
     return (
         <div>
-            <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && search()}
-                placeholder="Search books..."
-            />
-            <button onClick={search}>Search</button>
+            <div style={{
+                display: "flex",
+                justifyContent: "center",
+                padding: "1.5rem",
+            }}>
+                <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    backgroundColor: "#fdf6ec",
+                    border: "2px solid #b87d11",
+                    borderRadius: "8px",
+                    padding: "0.4rem 0.75rem",
+                    gap: "0.5rem",
+                    width: "100%",
+                }}>
+                    <input
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && search()}
+                        placeholder="Search books..."
+                        style={{
+                            flex: 1,
+                            border: "none",
+                            outline: "none",
+                            backgroundColor: "transparent",
+                            fontSize: "1rem",
+                            color: "#b87d11",
+                            caretColor: "#7a5230",
+                        }}
+                    />
+                    <button
+                        onClick={search}
+                        style={{
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            padding: "0.25rem",
+                            display: "flex",
+                            alignItems: "center",
+                            opacity: 0.75,
+                        }}
+                        aria-label="Search"
+                    >
+                        <img
+                            src="/images/search.svg"
+                            alt="Search"
+                            style={{ height: "18px", width: "18px" }}
+                        />
+                    </button>
+                </div>
+            </div>
 
-            <div>
+            <div style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.5rem",
+                margin: "0 auto",
+                padding: "1.5rem",
+            }}>
                 {books.map(book => (
                     <BookCard
                         key={book.id}
@@ -94,7 +148,6 @@ export default function Search() {
                         onRemove={remove}
                     />
                 ))}
-
             </div>
         </div>
     );

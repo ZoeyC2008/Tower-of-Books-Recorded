@@ -9,9 +9,11 @@ html,
 body {
   /*@apply bg-white dark:bg-gray-950;*/
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-  }
+  /*@media (prefers-color-scheme: dark) {*/
+  /*  color-scheme: dark;*/
+  /*}*/
+
+  background: #ffe0b4;
 }
 
 @keyframes fillRing {

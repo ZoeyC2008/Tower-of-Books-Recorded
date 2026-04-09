@@ -1,5 +1,5 @@
-import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import type {Route} from "./+types/home";
+import {Welcome} from "../welcome/welcome";
 
 // export function meta({}: Route.MetaArgs) {
 //   return [
@@ -8,13 +8,48 @@ import { Welcome } from "../welcome/welcome";
 //   ];
 // }
 
-export default function Home() {
-  return (
-      <>
-        <p>home page</p>
-        <p>Hi, wasn't too sure what to put on the homepage, but I guess this is a hobby project after I bounced off every popular method of keeping track of what books I've read and want to read. (Including, but not limited to Goodreads, Storygraph, Hardcover, paper and pencil, Google docs, Google sheets, pure memory, .txt, photos)</p>
-          <p>I think it's important to shoutout Hardcover, because I'm using their API for like all the book searching. They seem like great people, if you're actually in search of a way of keeping track of reading habits I'd recommend either them or just making a doc/sheet (my doc did serve me very well and was the method that survived the longest).</p>
-      </>
+import "~/app.css"
 
-  );
+export default function Home() {
+    return (
+        <>
+            <div style={{
+                margin: "0 auto",
+                padding: "1.5rem",
+                display: "flex",
+                flexDirection: "column",
+                gap: "1rem",
+            }}>
+                <h1 style={{
+                    fontSize: "2rem",
+                    fontWeight: 500,
+                    color: "#80471c",
+                    margin: 0,
+                    alignSelf: "center",
+                    fontFamily: "serif",
+                }}>
+                    Home
+                </h1>
+
+                <div style={{
+                    backgroundColor: "#fdf6ec",
+                    border: "2px solid #b87d11",
+                    borderRadius: "8px",
+                    padding: "1rem 1.25rem",
+                    color: "#b87d11",
+                    fontSize: "1rem",
+                    lineHeight: 1.7,
+                }}>
+                    <p style={{ margin: 0 }}>
+                        Shoutout to Hardcover, because I'm using their API for free to search
+                        through their book database. They seem like great people — if you're
+                        actually in search of a way of keeping track of reading habits I'd
+                        recommend either them or just making a doc/sheet (my doc did serve me
+                        very well and was the method that survived the longest).
+                    </p>
+                </div>
+            </div>
+        </>
+
+    );
 }
