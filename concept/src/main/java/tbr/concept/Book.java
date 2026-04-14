@@ -3,15 +3,20 @@ package tbr.concept;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import java.util.Arrays;
 
+@Entity
 public class Book {
+    @Id
     private int id;
     private String title;
     private String slug;
     private String description;
-    private String[] authors;
+    //private String[] authors;
     private String coverURL;
     private String featuredSeriesName;
     private int featuredSeriesPos;
@@ -23,6 +28,7 @@ public class Book {
     private String[] contentWarnings;
 
     @JsonIgnore
+    @Column(name = "shelf_name")
     private String shelfName = null;
 
     public Book(){}
@@ -48,7 +54,7 @@ public class Book {
         this.title = title;
         this.slug = slug;
         this.description = description;
-        this.authors = authors;
+        this.setAuthors(authors);
         this.coverURL = coverURL;
         this.featuredSeriesName = featuredSeriesName;
         this.featuredSeriesPos = featuredSeriesPos;
@@ -61,6 +67,18 @@ public class Book {
     }
 
 
+    @ElementCollection
+    private List<String> authors; // what JPA sees
+
+    // Getter your existing code already uses — converts back to array
+    public String[] getAuthors() {
+        return authors == null ? new String[0] : authors.toArray(new String[0]);
+    }
+
+    // Setter your existing code already uses — converts from array
+    public void setAuthors(String[] authors) {
+        this.authors = authors == null ? new ArrayList<>() : new ArrayList<>(Arrays.asList(authors));
+    }
 
     public void setShelfName(String shelf) {
         this.shelfName = shelf;
@@ -88,9 +106,9 @@ public class Book {
         return description;
     }
 
-    public String[] getAuthors() {
-        return authors;
-    }
+//    public String[] getAuthors() {
+//        return authors;
+//    }
 
     public String getCoverURL() {
         return coverURL;
@@ -130,6 +148,6 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book{id=" + id + ", title='" + title + "', authors=" + Arrays.toString(authors) + "}";
+        return "Book{id=" + id + ", title='" + title + "', authors=" + Arrays.toString(this.getAuthors()) + "}";
     }
 }

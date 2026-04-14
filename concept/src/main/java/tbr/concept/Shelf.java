@@ -1,14 +1,27 @@
 package tbr.concept;
 
+import jakarta.persistence.*;
+
 import java.util.*;
 
+@Entity
 public class Shelf {
-    private ArrayList<Book> books;
-    private final String NAME;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "shelf_name", referencedColumnName = "name")
+    private List<Book> books = new ArrayList<Book>();
+
+    @Column(unique = true, nullable = false)
+    private String name;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long dbId;
+
+    protected Shelf() {}
 
     public Shelf(String name) {
         books = new ArrayList<Book>();
-        this.NAME = name;
+        this.name = name;
     }
 
 
@@ -33,7 +46,7 @@ public class Shelf {
 
 
         books.add(book);
-        book.setShelfName(this.NAME);
+        book.setShelfName(this.name);
         sort();
     }
 
@@ -121,6 +134,6 @@ public class Shelf {
     }
 
     public String getName() {
-        return NAME;
+        return name;
     }
 }
