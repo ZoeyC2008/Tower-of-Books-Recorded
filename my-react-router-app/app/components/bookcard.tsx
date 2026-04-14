@@ -274,6 +274,24 @@ function BookCard({ book, shelf, onAddTBR, onMoveToRead, onRemove }: BookCardPro
                         <div style={{ fontSize: 14, color: "#7a6147", fontWeight: 500 }}>
                             Availability checks pending
                         </div>
+
+                        <div style={{ alignItems: "center", display: "flex", flexDirection: "row", gap: 10, minWidth: 0 }}>
+                            <div style={{ fontSize: 14, fontWeight: 500, color: "#7a6147", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                                Ottawa Public Library
+                            </div>
+
+                            <a href={`https://ottawa.bibliocommons.com/v2/search?custom_edit=false&query=(contributor%3A(${encodeURIComponent(book.authors?.[0] ?? "")})%20AND%20title%3A(${encodeURIComponent(book.title)})%20)&searchType=bl&suppress=true`} target={"blank"} rel={"noreferrer"} style={{
+                                alignSelf: "flex-start", fontSize: 14, color: "#3a7bd5",
+                                background: "#dbeafe", border: "0.5px solid #3a7bd5",
+                                borderRadius: 6, padding: "5px 12px", cursor: "pointer",
+                                fontFamily: "inherit", textDecoration: "none",
+                            }}>
+                                Link
+                            </a>
+                        </div>
+                        {/*here's the bit for ottawa public library, i think*/}
+
+
                     </div>
                 )}
 
