@@ -15,6 +15,7 @@ public class Book {
     private int id;
     private String title;
     private String slug;
+    @Column(length = 10000)
     private String description;
     //private String[] authors;
     private String coverURL;
