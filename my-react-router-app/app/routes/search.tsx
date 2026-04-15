@@ -10,7 +10,7 @@ export default function Search() {
     const [books, setBooks] = useState<Book[]>([]);
 
     const search = async () => {
-        const res = await fetch(`http://localhost:8080/api/hardcover/search?q=${query}`);
+        const res = await fetch(`https://tower-of-books-recorded.onrender.com/api/hardcover/search?q=${query}`);
         const data: Book[] = await res.json();
         const merged = await fetchShelfStatus(data);
         setBooks(merged);
@@ -18,7 +18,7 @@ export default function Search() {
 
 
     const fetchShelfStatus = async (searchResults: Book[]): Promise<Book[]> => {
-        const res = await fetch("http://localhost:8080/api/shelves/all");
+        const res = await fetch("https://tower-of-books-recorded.onrender.com/api/shelves/all");
         const shelfBooks: Book[] = await res.json();
 
         // build a quick id -> shelf lookup
@@ -36,7 +36,7 @@ export default function Search() {
 
     const addTBR = async (book: Book) => {
         try {
-            await fetch(`http://localhost:8080/api/shelves/tbr`, {
+            await fetch(`https://tower-of-books-recorded.onrender.com/api/shelves/tbr`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(book),
@@ -53,7 +53,7 @@ export default function Search() {
 
     const moveToRead = async (id: number) => {
         try {
-            await fetch(`http://localhost:8080/api/shelves/tbr/${id}/move-to-read`, {
+            await fetch(`https://tower-of-books-recorded.onrender.com/api/shelves/tbr/${id}/move-to-read`, {
                 method: "POST",
             });
             setBooks(prev => prev.map(b =>
@@ -67,7 +67,7 @@ export default function Search() {
     const remove = async (id: number) => {
         const book = books.find(b => b.id === id);
         if (!book?.shelf) return;
-        await fetch(`http://localhost:8080/api/shelves/${book.shelf}/${id}`, {
+        await fetch(`https://tower-of-books-recorded.onrender.com/api/shelves/${book.shelf}/${id}`, {
             method: "DELETE",
         });
         // remove from local state immediately

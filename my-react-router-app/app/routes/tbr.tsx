@@ -10,14 +10,14 @@ export default function TBR() {
     const [view, setView] = useState<ShelfView>("all");
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/shelves/${view}`)
+        fetch(`https://tower-of-books-recorded.onrender.com/api/shelves/${view}`)
             .then(res => res.json())
             .then(data => setBooks(data));
     }, [view]);
 
     const addTBR = async (book: Book) => {
         try {
-            await fetch(`http://localhost:8080/api/shelves/tbr`, {
+            await fetch(`https://tower-of-books-recorded.onrender.com/api/shelves/tbr`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(book),
@@ -32,7 +32,7 @@ export default function TBR() {
 
     const moveToRead = async (id: number) => {
         try {
-            await fetch(`http://localhost:8080/api/shelves/tbr/${id}/move-to-read`, {
+            await fetch(`https://tower-of-books-recorded.onrender.com/api/shelves/tbr/${id}/move-to-read`, {
                 method: "POST",
             });
             setBooks(prev => prev.map(b =>
@@ -46,7 +46,7 @@ export default function TBR() {
     const remove = async (id: number) => {
         const book = books.find(b => b.id === id);
         if (!book?.shelf) return;
-        await fetch(`http://localhost:8080/api/shelves/${book.shelf}/${id}`, {
+        await fetch(`https://tower-of-books-recorded.onrender.com/api/shelves/${book.shelf}/${id}`, {
             method: "DELETE",
         });
         setBooks(prev => prev.filter(b => b.id !== id));
