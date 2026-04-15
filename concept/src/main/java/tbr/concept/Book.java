@@ -22,10 +22,17 @@ public class Book {
     private int featuredSeriesPos;
     private String featuredSeriesSlug;
     private int featuredSeriesId;
-    private String[] genres;
-    private String[] isbn;
-    private String[] seriesNames;
-    private String[] contentWarnings;
+    @ElementCollection
+    private List<String> genres;
+
+    @ElementCollection
+    private List<String> isbn;
+
+    @ElementCollection
+    private List<String> seriesNames;
+
+    @ElementCollection
+    private List<String> contentWarnings;
 
     @JsonIgnore
     @Column(name = "shelf_name")
@@ -60,10 +67,10 @@ public class Book {
         this.featuredSeriesPos = featuredSeriesPos;
         this.featuredSeriesSlug = featuredSeriesSlug;
         this.featuredSeriesId = featuredSeriesId;
-        this.genres = genres;
-        this.isbn = isbn;
-        this.seriesNames = seriesNames;
-        this.contentWarnings = contentWarnings;
+        this.setGenres(genres);
+        this.setIsbn(isbn);
+        this.setSeriesNames(seriesNames);
+        this.setContentWarnings(contentWarnings);
     }
 
 
@@ -87,6 +94,34 @@ public class Book {
     @JsonProperty("shelf")
     public String getShelfName() {
         return shelfName;
+    }
+
+    public String[] getGenres() {
+        return genres == null ? new String[0] : genres.toArray(new String[0]);
+    }
+    public void setGenres(String[] genres) {
+        this.genres = genres == null ? new ArrayList<>() : new ArrayList<>(Arrays.asList(genres));
+    }
+
+    public String[] getIsbn() {
+        return isbn == null ? new String[0] : isbn.toArray(new String[0]);
+    }
+    public void setIsbn(String[] isbn) {
+        this.isbn = isbn == null ? new ArrayList<>() : new ArrayList<>(Arrays.asList(isbn));
+    }
+
+    public String[] getSeriesNames() {
+        return seriesNames == null ? new String[0] : seriesNames.toArray(new String[0]);
+    }
+    public void setSeriesNames(String[] seriesNames) {
+        this.seriesNames = seriesNames == null ? new ArrayList<>() : new ArrayList<>(Arrays.asList(seriesNames));
+    }
+
+    public String[] getContentWarnings() {
+        return contentWarnings == null ? new String[0] : contentWarnings.toArray(new String[0]);
+    }
+    public void setContentWarnings(String[] contentWarnings) {
+        this.contentWarnings = contentWarnings == null ? new ArrayList<>() : new ArrayList<>(Arrays.asList(contentWarnings));
     }
 
     //getters
@@ -128,22 +163,6 @@ public class Book {
 
     public int getFeaturedSeriesId() {
         return featuredSeriesId;
-    }
-
-    public String[] getGenres() {
-        return genres;
-    }
-
-    public String[] getIsbn() {
-        return isbn;
-    }
-
-    public String[] getSeriesNames() {
-        return seriesNames;
-    }
-
-    public String[] getContentWarnings() {
-        return contentWarnings;
     }
 
     @Override
